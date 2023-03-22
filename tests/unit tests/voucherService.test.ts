@@ -57,6 +57,9 @@ describe('voucher service suite', () => {
         const result = await voucherService.applyVoucher(code, amount);
         expect(result.applied).toBe(true);
     })
+
+
+
     it('should throw an error when try to create a voucher with a code that is already being used', async () => {
         const code = 'some random string';
         const discount = Math.random() * 100;
@@ -71,5 +74,16 @@ describe('voucher service suite', () => {
             type: "conflict",
             message: "Voucher already exist."
         })
+    })
+    it('should create a voucher ', async () => {
+        const code = 'some random string';
+        const discount = Math.random() * 100;
+
+        jest.spyOn(voucherRepository, "getVoucherByCode").mockResolvedValueOnce(null);
+        jest.spyOn(voucherRepository, "createVoucher").mockImplementationOnce((): any => { });
+
+        await voucherService.createVoucher(code, discount);
+
+        expect(voucherRepository.createVoucher).toBeCalled();
     })
 })
